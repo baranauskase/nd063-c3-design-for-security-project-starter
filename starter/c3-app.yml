@@ -32,8 +32,9 @@ Resources:
             Version: 2012-10-17
             Statement:
               - Effect: Allow
-                Action: 's3:*'
-                Resource: '*'
+                Action:
+                  - 's3:GetObject'
+                Resource: 'arn:aws:s3:::cand-c3-free-recipes-215884729453/*'
 
   InstanceProfileRole:
     Type: AWS::IAM::InstanceProfile
@@ -51,20 +52,25 @@ Resources:
       - IpProtocol: -1
         CidrIp: 0.0.0.0/0
       SecurityGroupIngress:
-      - IpProtocol: -1
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 22
-        ToPort: 22
-        CidrIp: 0.0.0.0/0
+      # - IpProtocol: -1
+      #   CidrIp: 0.0.0.0/0
+      # - IpProtocol: tcp
+      #   FromPort: 22
+      #   ToPort: 22
+      #   CidrIp: 0.0.0.0/0
+      # - IpProtocol: tcp
+      #   FromPort: 5000
+      #   ToPort: 5000
+      #   CidrIp: 0.0.0.0/0
+      # - IpProtocol: tcp
+      #   FromPort: 80
+      #   ToPort: 80
+      #   CidrIp: 0.0.0.0/0
       - IpProtocol: tcp
         FromPort: 5000
         ToPort: 5000
-        CidrIp: 0.0.0.0/0
-      - IpProtocol: tcp
-        FromPort: 80
-        ToPort: 80
-        CidrIp: 0.0.0.0/0
+        #CidrIp: !ImportValue PublicSubnetTrustedCidrBlock
+        SourceSecurityGroupId: !Ref AppLoadBalancerSG
       VpcId: !ImportValue VpcId
 
   RecipeWebServiceInstance:
@@ -75,7 +81,8 @@ Resources:
       KeyName: !Ref KeyPair
       SecurityGroupIds:
       - !GetAtt WebAppSG.GroupId
-      SubnetId: !ImportValue PublicSubnetTrusted
+      #SubnetId: !ImportValue PublicSubnetTrusted
+      SubnetId: !ImportValue PrivateSubnet
       IamInstanceProfile: !Ref InstanceProfileRole
       Tags:
       - Key: "Name"
@@ -110,10 +117,10 @@ Resources:
         CidrIp: 0.0.0.0/0
       VpcId: !ImportValue VpcId
 
-  AppEIP:
-    Type: AWS::EC2::EIP
-    Properties:
-      InstanceId: !Ref RecipeWebServiceInstance
+  # AppEIP:
+  #   Type: AWS::EC2::EIP
+  #   Properties:
+  #     InstanceId: !Ref RecipeWebServiceInstance
 
   AppLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -180,7 +187,7 @@ Resources:
 Outputs:
   AttackInstanceIP:
     Value: !GetAtt AttackInstance.PublicDnsName
-  ApplicationInstanceIP:
-    Value: !GetAtt RecipeWebServiceInstance.PublicDnsName
+  # ApplicationInstanceIP:
+  #   Value: !GetAtt RecipeWebServiceInstance.PublicDnsName
   ApplicationURL:
     Value: !GetAtt AppLoadBalancer.DNSName

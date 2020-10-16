@@ -1,3 +1,5 @@
 Research and analyze which of the vulnerabilities appear to be related to the code that was deployed for the environment in this project.
 
 Bonus - provide recommendations on how to remediate the vulnerabilities.
+
+Most of the vulnerabilities reported by Config, Security Inspector and GuardDuty relate to access being too open on the web server instance. These can be easily fixed by tightening the security group associated with that instance. One interesting vulnerability was reported in Security Hub: EC2.8 EC2 instances should use Instance Metadata Service Version 2 (IMDSv2). This vulnerability is known to have exploited by performing server-side request forgery. The only way to mitigate this vulnerability is to update AWS SDKs on that instance.

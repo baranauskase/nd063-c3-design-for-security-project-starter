@@ -3,3 +3,7 @@
 # Identify 2-3 changes that can be made to our environment to prevent an ssh brute force attack from the internet.
 
 # Neither instance should have had access to the secret recipes bucket, in the even that instance API credentials were compromised how could we have prevented access to sensitive data.
+
+The first and most important change in my opinion is to redeploy web server instance in a private subnet. There is really no good reason for being able to route directly to this instance from the public internet when we have a load balancer for this purpose. The next change I would carry it out is to only allow inbound connection to the web server instance from the load balancer security group on port 5000, where application is served. 
+
+The access to secret recipes bucket needs to be better protected as neither instance should have access to this bucket. This can be rectified by introducing a new IAM role that would have to be assumed in order to access this bucket.

@@ -1,8 +1,16 @@
 
 # What additional architectural change can be made to reduce the internet facing attack surface of the web application instance.
 
+The web server instance still is hosted in the public subnet and has a public IP associated to it. This is generally bad practice and the attack surface can be significantly reduced by moving this instance to the private subnet and not associating a public IP to it.
+
 # Assuming the IAM permissions for the S3 bucket are still insecure, would creating VPC private endpoints for S3 prevent the unauthorized access to the secrets bucket.
+
+The IAM role that is associated with web server instance had a policy that was too open and allowed full access to all S3 buckets. This has been improved by reducing the scope to read only access of a free recipes bucket. So, in case of a successful breach where temporary credentials for this role are leaked, they would not grant the attacker access to secret recipe bucket anymore. A private endpoint improves the security posture from a perspective that we do not need to route to S3 from our VPC over public internet. However, if the attacker is within the VPC a leas privilege IAM roles are paramount.
 
 # Will applying default encryption setting to the s3 buckets encrypt the data that already exists?
 
+Applying default encryption to the S3 bucket does not force the encryption of existing objects automatically. 
+
 # What would happen if the original cloud formation templates are applied to this environment.
+
+The changes I’ve made to improve the security posture so far were by modifying the CloudFormation templates and updating the stacks. It is not a good practice to perform out-of-band fixes, as in these cases we would need to detect drift and change templates accordingly before they are safe to use in updating the stacks.

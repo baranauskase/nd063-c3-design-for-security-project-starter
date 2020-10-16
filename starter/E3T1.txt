@@ -1,3 +1,5 @@
 # Describe GuardDuty findings that were detected related to the brute force attack
 
 # Research the AWS Guard Duty documentation page and explain how GuardDuty may have detected this attack - i.e. what was its source of information.
+
+GuardDuty is a continuous security monitoring service that processes a number of data sources in near real time. The data sources include: VPC Flow Logs, AWS CloudTrail management event logs, Cloudtrail S3 data event logs, and DNS logs. Our attempt on brute force attack has been correctly detected by GuardDuty. More specifically it reported a finding of type: UnauthorizedAccess:EC2/SSHBruteForce on the web server instance. The VPC where web server instance is deployed has Flow Logs enabled.  This is the most likely source of events that allowed GuardDuty to detect failed SSH connection attempts that were generated as a result of running a dictionary attack using Hydra.

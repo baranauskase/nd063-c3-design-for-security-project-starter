@@ -1,0 +1,7 @@
+Based on the architecture diagram, and the steps you have taken so far to upload data and access the application web service, identify at least 2 obvious poor practices as it relates to security.  Include justification.
+
+# Poor practice 1
+The first problem that I identified is the fact that web service instance is deployed on a public subnet. This is unnecessary since we have a load balancer that allows ingress from public internet to the app server. Moreover, there is a public IP associated with the web service instance and a security group that allows access for anyone (e.g. 0.0.0.0/0) on port 22. We should not need to SSH into the web service for any purpose and in case changes are required a better option is to always build a new version of an image. Moving this instance to a private subnet and tightening the security group would significantly reduce the attack vector.
+
+# Poor practice 2
+The second problem that I identified is the fact that web service instance accesses S3 via a public endpoint. This means that we are moving data from S3 to the web service instance over a public internet, which unnecessarily increases the attack surface.  Generally, a better approach is to deploy a private endpoint within VPC for accessing S3. Then S3 bucket can be setup to block all public access.

@@ -2,12 +2,24 @@
 
 ## Scan infrastructure as code templates
 
+There are numerous commercial and open source tools for performing static vulnerability scanning in Terraform and CloudFormation templates. Some example of CloudFormation template scanners include, Cfripper, Cloudsploit and cfn-lint. In the world of Terraform we have Chef inspec, Regula and Terrascan. The examples provided here are open source tools so are free to use and integrate in CI/CD pipelines but might require more work in setting up policies depending on the particular business requirements.
+
 ### Example vulnerability
+
+Static template scanning against a policy document can detect all kinds of misconfigurations. For example, we could identify IAM policies that are too open or that EBS volumes do not have server-side encryption enabled. Another good example is a security group that is too open.
 
 ##Scan AMI’s or containers for OS vulnerabilities
 
+I do not use custom AMIs in my line of work so will focus on Dockerfiles instead. At this point time a lot of container registries come with vulnerability scanners. There are also open source options such as Anchore engine. This type of scanner can perform static analysis of an operating system and software in the container against common vulnerabilities and exposures. 
+
 ### Example vulnerability
+
+The static analysis of containers generally can identify packages and software that are known to have vulnerabilities. The solution usually is to update the affected software.
 
 ##Scan an AWS environment for cloud configuration vulnerabilities
 
+The last line of defence is live scanning of infrastructure during operation. AWS offers three main products, Config, Inspector and GuardDuty. This triage of tools can perform on going compliance scanning of the infrastructure as well as detect attacks in near real time.
+
 ### Example vulnerability
+
+Good examples of the vulnerabilities that these tools can detect include misconfigured resources, such not using default encryption in EBS or S3, detection of security groups that are too open or use of outdated and vulnerable software in AMI images. 
